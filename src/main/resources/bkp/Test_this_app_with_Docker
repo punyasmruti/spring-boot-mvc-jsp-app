@@ -1,0 +1,4 @@
+project_root_dir > mvn clean package
+docker image ls
+docker run -p 8080:8080 punya/spring-boot_mvc_jsp:0.0.1-SNAPSHOT
+http://localhost:8080/
