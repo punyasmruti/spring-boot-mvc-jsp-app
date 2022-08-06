@@ -1,0 +1,2 @@
+spring mvc with exception handling: 
+https://www.journaldev.com/2651/spring-mvc-exception-handling-controlleradvice-exceptionhandler-handlerexceptionresolver

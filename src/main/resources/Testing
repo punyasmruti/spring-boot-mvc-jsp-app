@@ -1,0 +1,21 @@
+java -jar target/spring-boot-mvc-jsp-app.war
+java -jar target/spring-boot-mvc-jsp-app.war --server.port=8082
+java -jar target/spring-boot-mvc-jsp-app.war --spring.profiles.active=dev
+java -jar target/spring-boot-mvc-jsp-app.war --spring.profiles.active=qa
+java -jar target/spring-boot-mvc-jsp-app.war --spring.profiles.active=uat
+java -jar target/spring-boot-mvc-jsp-app.war --spring.profiles.active=prod
+java -jar target/spring-boot-mvc-jsp-app.war -Dspring.config.location=E:\punya_workspace\workspace_eclipse\spring-boot-mvc-jsp_01\src\main\resources\application.properties
+#OR
+# with eclipse
+java -jar target/spring-boot-mvc-jsp-app.war -Dspring.profiles.active=dev
+java -jar target/spring-boot-mvc-jsp-app.war -Dspring.profiles.active=qa
+java -jar target/spring-boot-mvc-jsp-app.war -Dspring.profiles.active=uat   (as VM argument in eclipse)
+java target/spring-boot-mvc-jsp-app.war -jar -Dspring.profiles.active=prod
+
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev,qa
+mvn spring-boot:run -Dspring-boot.run.default=qa
+mvn spring-boot:run -Dspring-boot.run.default=uat
+mvn spring-boot:run -Dspring-boot.run.default=prod
+
+
