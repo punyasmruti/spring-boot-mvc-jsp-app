@@ -3,12 +3,12 @@ package com.springboot.dao;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.catalina.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -25,13 +25,13 @@ import com.springboot.mvccontroller.SpringMvcTutorialsController;
 public class UserDaoImplUsingMap implements UserDao {
 	
 	private Log log = LogFactory.getLog(SpringMvcTutorialsController.class);
-	private static Long id = 0L;
+	private static Long userId = 0L;
 	private static final Map<Long, UserRegistration> usersMap = new HashMap<>();
 	// private static Map<Long, UserRegistration> usersMap = new ConcurrentHashMap<>();
 	static {
 
 		UserRegistration user1 = new UserRegistration();
-		user1.setUserId(++id);
+		user1.setUserId(++userId);
 		user1.setFirstname("Punyasmruti");
 		user1.setLastname("Nayak");
 		user1.setAge(31);
@@ -44,7 +44,7 @@ public class UserDaoImplUsingMap implements UserDao {
 		}
 
 		UserRegistration user2 = new UserRegistration();
-		user2.setUserId(++id);
+		user2.setUserId(++userId);
 		user2.setFirstname("Pankaj kumar");
 		user2.setLastname("Prajapati");
 		user2.setAge(30);
@@ -67,9 +67,8 @@ public class UserDaoImplUsingMap implements UserDao {
 	@Override
 	public UserRegistration saveUserRegistration(UserRegistration user) {
 		log.info("Inside userDaoImpl saveUserRegistration :");
-		++id;
-		user.setUserId(id);
-		usersMap.put(id, user);
+		user.setUserId(++userId);
+		usersMap.put(userId, user);
 		UserRegistration u = usersMap.get(user.getUserId());
 		return u;
 	}
@@ -82,9 +81,7 @@ public class UserDaoImplUsingMap implements UserDao {
 	@Override
 	public UserRegistration getUserByUserId2(Long userId) {
 		//log.info("Inside userDaoImpl getUserByUserId :");
-		UserRegistration user = usersMap.get(userId);
-		//log.debug("user = {}",user);
-		return user;
+		return  usersMap.get(userId);
 	}
 	@Override
 	public List<UserRegistration> getAllUsers() {
@@ -99,13 +96,11 @@ public class UserDaoImplUsingMap implements UserDao {
 		return usersAll;
 	}
 
-	@Override
-	public UserRegistration getUserByEmailID1(String email) {
-		return usersMap.values().stream()
-				.filter(userRegistration -> userRegistration.getEmailId().equalsIgnoreCase(email))
-				.collect(Collectors.toList())
-				.get(1);
+	//@Override
+	public List<UserRegistration> getAllUsers2() {
+	return new ArrayList<>(usersMap.values());
 	}
+
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname(String firstname) {
@@ -173,6 +168,14 @@ public class UserDaoImplUsingMap implements UserDao {
 				.collect(Collectors.toMap(UserRegistration::getUserId, UserRegistration::getEmailId ));
 	}
 
+	//@Override
+	public List<String> getEmailIsDByFirstname(String firstname) {
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.map(UserRegistration::getEmailId).sorted(Collections.reverseOrder()).collect(Collectors.toList());
+	}
+
 	@Override
 	public List<String> tansformAllFirstnamesToUppercase() {
 		return usersMap.values()
@@ -199,27 +202,29 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public List<UserRegistration> getUsersByLastname_WithFirstnameInAscendingOrder(String lastname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getLastname().equalsIgnoreCase(lastname))
+				.sorted((e1,e2) -> e2.getFirstname().compareTo(e1.getFirstname()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByLastname_WithFirstnameInDescendingOrder(String lastname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getLastname().equalsIgnoreCase(lastname))
+				.sorted((e1,e2) -> e2.getFirstname().compareTo(e1.getFirstname()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Map<Long, String> getUserIdAndEmailIDByLastname(String lastname) {
-		return null;
-	}
-
-	@Override
-	public Map<Long, String> getContactIdAndEmailIDByLastname(String lastname) {
-		return null;
-	}
-
-	@Override
-	public Map<String, String> getFirstnameAndEmailIDByLastname(String lastname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getLastname().equalsIgnoreCase(lastname))
+				.sorted((e1,e2) -> e2.getFirstname().compareTo(e1.getFirstname()))
+				.collect(Collectors.toMap(UserRegistration::getUserId,UserRegistration::getEmailId));
 	}
 
 	@Override
@@ -228,38 +233,65 @@ public class UserDaoImplUsingMap implements UserDao {
 	}
 
 	@Override
+	public UserRegistration getUserByEmailID1(String email) {
+		return usersMap.values().stream()
+				.filter(userRegistration -> userRegistration.getEmailId().equalsIgnoreCase(email))
+				.collect(Collectors.toList())
+				.get(1);
+	}
+
+	@Override
 	public List<UserRegistration> getUsersByMobileNo(Long MobileNo) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getMobileNos().contains(MobileNo))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Long countByFirstname(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname)).count();
 	}
 
 	@Override
 	public Long countByLastname(String lastname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(lastname)).count();
 	}
 
 	@Override
 	public Map<String, Integer> getUsersEmailAndAgeByAge(int age) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge() ==age)
+				.collect(Collectors.toMap(UserRegistration::getEmailId,UserRegistration::getAge));
 	}
 
 	@Override
 	public Long countUsersByAgeRange(int age1, int age2) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge() > age1 && userRegistration.getAge() < age2)
+				.count();
 	}
 
 	@Override
 	public UserRegistration getUserByEmailID2(String email) {
-		return null;
+		return usersMap
+				.values()
+				.stream().filter(userRegistration -> userRegistration.getEmailId().equalsIgnoreCase(email))
+				.collect(Collectors.toList()).get(1);
 	}
 
 	@Override
 	public Map<String, Integer> getUserEmailAngAgeByEmailID(String email) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getEmailId().equalsIgnoreCase(email))
+				.collect(Collectors.toMap(UserRegistration::getEmailId, UserRegistration::getAge));
 	}
 
 	@Override
@@ -269,7 +301,11 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public Map<String, String> getFirstnameAndEmailIDByFirstnameWhereAgeGreaterThan30(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge() > 30)
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.collect(Collectors.toMap(UserRegistration::getEmailId,UserRegistration::getFirstname));
 	}
 
 	@Override
@@ -382,17 +418,18 @@ public class UserDaoImplUsingMap implements UserDao {
 	}
 
 	@Override
-	public void deleteAllUsers() {
-		log.info("Inside userDaoImpl deleteAllUsers :");
-		// usersMap.clear();
-	}
-
-	@Override
 	public UserRegistration updateUserRegistration(UserRegistration user) {
 		//log.info("Indise UserDaoImpl updateUserRegistration:{}",user);
 		if (!usersMap.containsKey(user.getUserId())) throw new UserNotFoundException("User not found");
 		usersMap.put(user.getUserId(), user);
 		return usersMap.get(user.getUserId());
+	}
+
+
+	@Override
+	public void deleteAllUsers() {
+		log.info("Inside userDaoImpl deleteAllUsers :");
+		// usersMap.clear();
 	}
 
 	@Override

@@ -396,7 +396,7 @@ public class UserDaoImplUsingList implements UserDao {
 	}
 	
 	
-	@Override
+	//@Override
 	public Map<Long, String> getContactIdAndEmailIDByLastname(String lastname) {
 		Predicate<UserRegistration> predicate1 = (user) -> user.getLastname().equalsIgnoreCase(lastname);
 		Map<Long, String> map = usersList.stream()
@@ -406,7 +406,7 @@ public class UserDaoImplUsingList implements UserDao {
 		return map;
 	}
 	
-	@Override
+	//@Override
 	public Map<String, String> getFirstnameAndEmailIDByLastname(String lastname) {
 		Predicate<UserRegistration> predicate1 = (contact) -> contact.getLastname().equalsIgnoreCase(lastname);
 		Map<String, String> map = usersList.stream()
@@ -629,7 +629,8 @@ public class UserDaoImplUsingList implements UserDao {
 	public Long countUsersByHobby(String hobby) {
 		 return usersList
 				 .stream()
-				 .filter(user -> user.getHubbies().contains(hobby)).count();
+				 .filter(user -> user.getHubbies().contains(hobby))
+				 .count();
 	}
 	
 

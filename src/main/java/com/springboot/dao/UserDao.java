@@ -48,8 +48,6 @@ public interface UserDao {
 	public List<UserRegistration> getUsersByLastname_WithFirstnameInAscendingOrder(String lastname);
 	public List<UserRegistration> getUsersByLastname_WithFirstnameInDescendingOrder(String lastname);
 	public Map<Long, String> getUserIdAndEmailIDByLastname(String lastname);
-	public Map<Long, String> getContactIdAndEmailIDByLastname(String lastname);
-	public Map<String, String> getFirstnameAndEmailIDByLastname(String lastname);
 	public Long countByLastname(String lastname);
 	
 	//by email 
