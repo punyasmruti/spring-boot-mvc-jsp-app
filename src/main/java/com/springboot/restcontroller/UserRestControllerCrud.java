@@ -8,15 +8,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/api/rest")
+//@Slf4j
 public class UserRestControllerCrud {
 
 	Logger log = LoggerFactory.getLogger(this.getClass()); // slf4j logging
 
-	@RequestMapping(value = "/api/rest/hello", method = RequestMethod.GET)
+	@RequestMapping(value = "/hello", method = RequestMethod.GET)
 	@ResponseBody
 	public String hello() {
 		log.info("Inside UserRestController hello()");
-		return "Hello Spring Boot";
+		return "Hello Spring Boot rest controller";
 	}// http://localhost:8081/api/rest/hello
 
 }

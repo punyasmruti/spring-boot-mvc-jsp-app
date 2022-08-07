@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -82,8 +83,7 @@ public class UserMvcControllerCrud {
 		// public ModelAndView showUserRegisterform(ModelMap map) {
 		// public String showUserRegisterform(Model model) {
 		// public String showUserRegisterform(ModelMap model) { //OK
-
-		log.info("Inside UserMvcController, Accessing user register page");
+		log.info("Inside UserMvcController, showUserRegisterform ");
 		model.addAttribute("user", new UserRegistration());
 		// map.put("user", new UserRegistration());
 		return new ModelAndView("userRegistrationForm1");
@@ -94,7 +94,6 @@ public class UserMvcControllerCrud {
 	@RequestMapping(path = "/register", method = RequestMethod.POST)
 	public String saveUserRegistaration2(@Valid @ModelAttribute("userRegistration") UserRegistration userRegistration,
 			BindingResult result, ModelMap model, RedirectAttributes redirectAttributes) {
-
 		log.info("Inside UserMvcController saveUserRegistaration:{}", userRegistration);
 
 		if (result.hasErrors()) {
@@ -105,12 +104,12 @@ public class UserMvcControllerCrud {
 
 		if (u != null) {
 			redirectAttributes.addFlashAttribute("successMessage", "User saved successfully");
+			return "redirect:/users";
 		} else {
 			model.addAttribute("errorMessage", "user  not saved successfully");
 			model.addAttribute("user", userRegistration);
+			return "userRegistrationForm1";
 		}
-
-		return "redirect:/users";
 	}
 
 
@@ -145,10 +144,9 @@ public class UserMvcControllerCrud {
 		// return new ModelAndView("viewstudents","userslist",userslist); //OK
 	}
 
-	@RequestMapping(value = "/users2", method = RequestMethod.GET)
+	@RequestMapping(value = "/users/all", method = RequestMethod.GET)
 	public ModelAndView viewAllRegisteredUsers(Model model) {
-		// public String viewAllRegisteredUsers(ModelMap map) { //OK
-
+	// public String viewAllRegisteredUsers(ModelMap map) { //OK
 		log.info("Inside UserMvcController , Accessing all users");
 		List<UserRegistration> userslist = userService.getAllUsers();
 		model.addAttribute("usersList", userslist);
@@ -193,7 +191,6 @@ public class UserMvcControllerCrud {
 	@RequestMapping(value = "/edituser2/{userId}", method = RequestMethod.GET)
 	public ModelAndView editUserRegistrationForm2(@PathVariable Long userId, Model model) {
 	// public String editUserForm(@PathVariable Long id, ModelMap map) {
-
 		log.info("Inside UserMvcController, Accessing user edit page for userId:{}", userId);
 		UserRegistration user = userService.getUserByUserId(userId);
 		model.addAttribute("user", user);
@@ -203,7 +200,6 @@ public class UserMvcControllerCrud {
 
 	@RequestMapping(value = "/editsave2", method = RequestMethod.POST)
 	public String updateUserRegistration2(@Valid @ModelAttribute("user") UserRegistration user, BindingResult result) {
-
 		log.info("Inside UserMvcController , updating user:{}", user);
 		if (result.hasErrors()) {
 			return "userEditRegistrationForm";
@@ -227,9 +223,8 @@ public class UserMvcControllerCrud {
 		return "redirect:/users";
 	}
 
-	@RequestMapping(value = "/deleteuser2/{userId}", method = RequestMethod.GET)
-	public String deleteUserRegistration2(@PathVariable Long userId) {
-
+	@RequestMapping(value = "/deleteuser", method = RequestMethod.GET)
+	public String deleteUserRegistration2(@RequestParam(value="userId") Long userId) {
 		log.info("Inside UserMvcController , Deleting user with ID : {}", userId);
 		userService.deleteUserByUserId(userId);
 		return "redirect:/users";
