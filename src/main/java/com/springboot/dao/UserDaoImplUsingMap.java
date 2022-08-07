@@ -30,11 +30,9 @@ import com.springboot.mvccontroller.SpringMvcTutorialsController;
 public class UserDaoImplUsingMap implements UserDao {
 	
 	private Log log = LogFactory.getLog(SpringMvcTutorialsController.class);
-
 	private static Long id = 0L;
 	private static Map<Long, UserRegistration> usersMap = new HashMap<>();
 	// private static Map<Long, UserRegistration> usersMap = new ConcurrentHashMap<>();
-
 	static {
 
 		UserRegistration user1 = new UserRegistration();
@@ -81,7 +79,6 @@ public class UserDaoImplUsingMap implements UserDao {
 		//log.debug("UserRegistration = {}",u);
 		return u;
 	}
-	
 	@Override
 	public UserRegistration getUserByUserId1(Long userId)  {
 		return null;
@@ -94,7 +91,6 @@ public class UserDaoImplUsingMap implements UserDao {
 		//log.debug("user = {}",user);
 		return user;
 	}
-
 	@Override
 	public List<UserRegistration> getAllUsers() {
 		log.info("Inside userDaoImpl getAllUsers :");
@@ -107,7 +103,6 @@ public class UserDaoImplUsingMap implements UserDao {
 		//log.debug("All users = {}",usersAll);
 		return usersAll;
 	}
-
 	@Override
 	public UserRegistration updateUserRegistration(UserRegistration user) {
 		log.info("Inside userDaoImpl updateUserRegistration :");
@@ -128,12 +123,6 @@ public class UserDaoImplUsingMap implements UserDao {
 		log.info("Inside userDaoImpl deleteAllUsers :");
 		// usersMap.clear();
 	}
-
-	@PreDestroy
-	public void destroy() {
-		log.info("userDaoImpl obj has destroyed");
-	}
-
 	@Override
 	public UserRegistration getUserByEmailID1(String email) {
 		return null;
@@ -281,73 +270,59 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public List<UserRegistration> getUsersByBirthYear(String year) {
-
 		return null;
 	}
-
 	@Override
 	public List<UserRegistration> getUsersByBirthDate_WithDobInDescendingOrder() {
-
 		return null;
 	}
-
 	@Override
 	public List<String> getUserEmails() {
-
 		return null;
 	}
-
 	@Override
 	public Long countUsersByHobby(String hobby) {
-
 		return null;
 	}
-
 	@Override
 	public Map<Object, List<UserRegistration>> grouUserByAge(Integer age) {
 
 		return null;
 	}
-
 	@Override
 	public String joiningAllEmailsWithDelimiter() {
-
 		return null;
 	}
-
 	@Override
 	public List<String> getAllEmails() {
-
 		return null;
 	}
 
 	@Override
 	public Optional<UserRegistration> minByAge() {
-
 		return null;
 	}
-
 	@Override
 	public Optional<UserRegistration> maxByAge() {
-
 		return null;
 	}
-
 	@Override
 	public Map<Boolean, Map<String, List<String>>> partitioningByAge() {
-
 		return null;
 	}
 
 	@Override
 	public double averageAge() {
-
 		return 0;
 	}
 
 	@Override
 	public Map<String, String> getEmailAndFirstNameByMobileNo(Long MobileNo) {
-
 		return null;
+	}
+
+	@PreDestroy
+	public void destroy() {
+		log.info("userDaoImpl obj has destroyed");
 	}
 }
