@@ -13,9 +13,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Component
 //public class MyCustomInterceptor implements HandlerInterceptor {
-public class MyCustomInterceptor extends HandlerInterceptorAdapter{
+public class CustomInterceptor extends HandlerInterceptorAdapter{
 	
-	private static final Logger log = LoggerFactory.getLogger(MyCustomInterceptor.class);
+	private static final Logger log = LoggerFactory.getLogger(CustomInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -31,8 +31,8 @@ public class MyCustomInterceptor extends HandlerInterceptorAdapter{
         // write ur own login here for specic requirement.
         Calendar c = Calendar.getInstance();
         @SuppressWarnings("static-access") int dayOfweek = c.get(c.DAY_OF_WEEK);
-        if (dayOfweek == 1) {
-            response.getWriter().write("Please visit this website except sunday");
+        if (dayOfweek == 7) {
+            response.getWriter().write("Please visit this website except saturday");
             return false;
         } else {
             return true;

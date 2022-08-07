@@ -20,14 +20,10 @@ import com.springboot.model.UserRegistration;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-
     private static final Logger log = LoggerFactory.getLogger(UserDaoImpl.class);
-
     private static Map<Long, UserRegistration> usersMap = new HashMap<>();
     // private static Map<Long, UserRegistration> usersMap = new ConcurrentHashMap<>();
-
     private static Long id = 0L;
-
     static {
 
         ++id;
@@ -38,7 +34,6 @@ public class UserDaoImpl implements UserDao {
         user1.setEmailId("punyasmruti@gmail.com");
         user1.setDob(new Date());
         usersMap.put(user1.getUserId(), user1);
-
 
         ++id;
         UserRegistration user2 = new UserRegistration();
@@ -55,7 +50,6 @@ public class UserDaoImpl implements UserDao {
         // System.out.println("inside init method");
     	log.info("Inside UserDaoImpl, Init method");
     }
-
     @Override
     public UserRegistration saveUserRegistration(UserRegistration user) {
         log.info("Insise UserDaoImpl saveUserRegistration:{}",user);
@@ -64,13 +58,11 @@ public class UserDaoImpl implements UserDao {
         usersMap.put(id, user);
         return usersMap.get(user.getUserId());
     }
-
     @Override
     public UserRegistration getUserByUserId1(Long userId) {
         log.info("Indise UserDaoImpl , getUserByUserId for userId:{}",userId);
         return usersMap.get(userId);
     }
-
     @Override
     public List<UserRegistration> getAllUsers() {
         log.info("Indise UserDaoImpl getAllUsers");
