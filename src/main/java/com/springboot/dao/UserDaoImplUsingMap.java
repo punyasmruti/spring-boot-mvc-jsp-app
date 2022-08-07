@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,10 +22,10 @@ import com.springboot.mvccontroller.SpringMvcTutorialsController;
 //@Profile({"default","dev", "qa","uat","prod"})
 //@Primary
 @Repository
-//@Slf4j
+@Slf4j
 public class UserDaoImplUsingMap implements UserDao {
 	
-	private Log log = LogFactory.getLog(SpringMvcTutorialsController.class);
+	//private Log log = LogFactory.getLog(UserDaoImplUsingMap.class);
 	private static Long userId = 0L;
 	private static final Map<Long, UserRegistration> usersMap = new HashMap<>();
 	// private static Map<Long, UserRegistration> usersMap = new ConcurrentHashMap<>();
@@ -66,7 +67,7 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public UserRegistration saveUserRegistration(UserRegistration user) {
-		log.info("Inside userDaoImpl saveUserRegistration :");
+		log.info("Inside userDaoImpl saveUserRegistration :{}",user);
 		user.setUserId(++userId);
 		usersMap.put(userId, user);
 		UserRegistration u = usersMap.get(user.getUserId());
@@ -80,7 +81,7 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public UserRegistration getUserByUserId2(Long userId) {
-		//log.info("Inside userDaoImpl getUserByUserId :");
+		log.info("Inside userDaoImpl getUserByUserId :{}",userId);
 		return  usersMap.get(userId);
 	}
 	@Override
@@ -434,7 +435,7 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public void deleteUserById(Long userId) {
-		//log.info("Indise UserDaoImpl deleteUserById:{}",userId);
+		//log.info("Inside UserDaoImpl deleteUserById:{}",userId);
 		usersMap.remove(userId);
 	}
 

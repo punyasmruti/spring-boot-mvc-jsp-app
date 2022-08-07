@@ -23,10 +23,18 @@ public interface UserDao {
 	 * Select Operations
 	 * #################
 	 */
-	
+
+	/**
+	 * #################
+	 * @param userId
+	 * @return
+	 * * #################
+	 */
+
 	//by userId
 	public UserRegistration getUserByUserId1(Long userId) ;
 	public UserRegistration getUserByUserId2(Long userId) ;
+
 	public List<String> getUserEmails();
 	
 	//by firstname
