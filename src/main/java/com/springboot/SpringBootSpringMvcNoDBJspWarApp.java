@@ -18,7 +18,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 //java -jar spring.profiles.active=dev springboot_springmvc.war
 
 
-//@Controller //optional
+//@Controller //this is optional
 
 /*
 @EnableAutoConfiguration
