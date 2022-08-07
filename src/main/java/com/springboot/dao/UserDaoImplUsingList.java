@@ -527,7 +527,7 @@ public class UserDaoImplUsingList implements UserDao {
 	}
 	
 	@Override
-	public Map<Object, List<UserRegistration>> grouUserByAge(Integer age) {
+	public Map<String, List<UserRegistration>> groupUserByAge(Integer age) {
 		return usersList.stream().collect(Collectors.groupingBy(user -> user.getAge() >= age ? "Senior" : "Junior"));
 
 	}
@@ -540,7 +540,7 @@ public class UserDaoImplUsingList implements UserDao {
 	}
 
 	@Override
-	public double averageAge() {
+	public Double averageAge() {
 		double avgAge = usersList.stream().collect(Collectors.averagingDouble(UserRegistration::getAge));
 		return avgAge;
 	}
@@ -597,7 +597,9 @@ public class UserDaoImplUsingList implements UserDao {
 	@Override
 	public List<UserRegistration> getUsersByMobileNo(Long MobileNo) {
 		//Predicate<UserRegistration> predicate = user -> user.getMobileNos().contains(MobileNo);
-		return usersList.stream().filter(user -> user.getMobileNos().contains(MobileNo)).collect(Collectors.toList());
+		return usersList.stream()
+				.filter(user -> user.getMobileNos().contains(MobileNo))
+				.collect(Collectors.toList());
 	}
 	
 	@Override
@@ -625,10 +627,9 @@ public class UserDaoImplUsingList implements UserDao {
 	
 	@Override
 	public Long countUsersByHobby(String hobby) {
-		 return  usersList
-                 .stream()
-                 .filter(user -> user.getHubbies().contains(hobby))
-                 .collect(Collectors.counting());
+		 return usersList
+				 .stream()
+				 .filter(user -> user.getHubbies().contains(hobby)).count();
 	}
 	
 

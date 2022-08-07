@@ -48,7 +48,7 @@ public class UserRegistration implements Serializable {
 	@Positive(message = "Age must be greater than 0")
 	@Min(value = 1, message = "{age.user.min}")
 	@Range(min = 1, max = 100, message = "Age should be of Min {min} and Max {max}")
-	private int age;
+	private Integer age;
 
 	@NotNull(message = "{user.birthday.notNull}")
 	@DateTimeFormat(pattern = "dd/mm/yyyy")

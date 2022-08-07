@@ -2,20 +2,15 @@ package com.springboot.dao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.springboot.exceptions.UserNotFoundException;
@@ -31,7 +26,7 @@ public class UserDaoImplUsingMap implements UserDao {
 	
 	private Log log = LogFactory.getLog(SpringMvcTutorialsController.class);
 	private static Long id = 0L;
-	private static Map<Long, UserRegistration> usersMap = new HashMap<>();
+	private static final Map<Long, UserRegistration> usersMap = new HashMap<>();
 	// private static Map<Long, UserRegistration> usersMap = new ConcurrentHashMap<>();
 	static {
 
@@ -76,12 +71,12 @@ public class UserDaoImplUsingMap implements UserDao {
 		user.setUserId(id);
 		usersMap.put(id, user);
 		UserRegistration u = usersMap.get(user.getUserId());
-		//log.debug("UserRegistration = {}",u);
 		return u;
 	}
+
 	@Override
 	public UserRegistration getUserByUserId1(Long userId)  {
-		return null;
+		return usersMap.get(userId);
 	}
 
 	@Override
@@ -103,84 +98,103 @@ public class UserDaoImplUsingMap implements UserDao {
 		//log.debug("All users = {}",usersAll);
 		return usersAll;
 	}
-	@Override
-	public UserRegistration updateUserRegistration(UserRegistration user) {
-		log.info("Inside userDaoImpl updateUserRegistration :");
-		if (!usersMap.containsKey(user.getUserId()))
-			throw new UserNotFoundException("User not found");
-		usersMap.put(user.getUserId(), user);
-		return usersMap.get(user.getUserId());
-	}
 
-	@Override
-	public void deleteUserById(Long userId) {
-		log.info("Inside userDaoImpl deleteUserById :");
-		usersMap.remove(userId);
-	}
-
-	@Override
-	public void deleteAllUsers() {
-		log.info("Inside userDaoImpl deleteAllUsers :");
-		// usersMap.clear();
-	}
 	@Override
 	public UserRegistration getUserByEmailID1(String email) {
-		return null;
+		return usersMap.values().stream()
+				.filter(userRegistration -> userRegistration.getEmailId().equalsIgnoreCase(email))
+				.collect(Collectors.toList())
+				.get(1);
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname_WithLastnameInAscendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getLastname))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUserssByFirstname_WithLastnameInDescendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getLastname).reversed())
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname_WithEmailInAscendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getEmailId)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname_WithEmailInDescendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getEmailId).reversed()).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname_WithAgeInAscendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getAge)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByFirstname_WithAgeInDescendingOrder(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.sorted(Comparator.comparing(UserRegistration::getAge).reversed()).collect(Collectors.toList());
 	}
 
 	@Override
 	public Map<Long, String> getUserIdAndEmailIDByFirstname(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.collect(Collectors.toMap(UserRegistration::getUserId, UserRegistration::getEmailId ));
 	}
 
 	@Override
 	public List<String> tansformAllFirstnamesToUppercase() {
-		return null;
+		return usersMap.values()
+				.stream()
+				.map(userRegistration -> userRegistration.getFirstname().toUpperCase())
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Map<String, String> getLastnameAndEmailIdByFirstname(String firstname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getFirstname().equalsIgnoreCase(firstname))
+				.collect(Collectors.toMap(UserRegistration::getLastname, UserRegistration::getEmailId ));
 	}
 
 	@Override
 	public List<UserRegistration> getUsersByLastname(String lastname) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getLastname().equalsIgnoreCase(lastname))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -260,12 +274,18 @@ public class UserDaoImplUsingMap implements UserDao {
 
 	@Override
 	public List<UserRegistration> getUsersByAge_WithFirstnameInDescendingOrder(int age1, int age2) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge() > age1 && userRegistration.getAge() < age2)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Long countUsersByAge(int age) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge() == age)
+				.count();
 	}
 
 	@Override
@@ -278,47 +298,107 @@ public class UserDaoImplUsingMap implements UserDao {
 	}
 	@Override
 	public List<String> getUserEmails() {
-		return null;
+		return usersMap.values()
+				.stream()
+				.map(UserRegistration::getEmailId).collect(Collectors.toList());
 	}
 	@Override
 	public Long countUsersByHobby(String hobby) {
-		return null;
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getHubbies().contains(hobby))
+				.count();
 	}
-	@Override
-	public Map<Object, List<UserRegistration>> grouUserByAge(Integer age) {
-
-		return null;
+	//@Override
+	public Map<String, List<UserRegistration>> groupUserByAge(Integer age) {
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getAge()>age)
+				.collect(Collectors.groupingBy(user -> user.getAge() >= age ? "Senior" : "Junior"));
 	}
 	@Override
 	public String joiningAllEmailsWithDelimiter() {
-		return null;
+		return usersMap.values()
+				.stream()
+				.map(UserRegistration::getEmailId)
+				.collect(Collectors.joining(","));
 	}
 	@Override
 	public List<String> getAllEmails() {
-		return null;
+		return usersMap.entrySet().
+				stream()
+				.map(e -> e.getValue().getEmailId())
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<UserRegistration> minByAge() {
-		return null;
+		return Optional.of(
+				usersMap.entrySet()
+				.stream()
+				.min((e1, e2) -> e2.getValue().getAge().compareTo(e1.getValue().getAge()))
+				.get()
+				.getValue());
 	}
 	@Override
 	public Optional<UserRegistration> maxByAge() {
+		/*return Optional.of(usersMap.entrySet()
+				.stream()
+				.sorted((e1,e2) -> e2.getValue().getAge().compareTo(e1.getValue().getAge()))
+				.max()
+				.get()
+				.getValue());*/
 		return null;
+
 	}
 	@Override
 	public Map<Boolean, Map<String, List<String>>> partitioningByAge() {
 		return null;
 	}
 
-	@Override
-	public double averageAge() {
-		return 0;
+	public Map<String,  List<UserRegistration>> partitioningByFirstname() {
+		return null;
+	}
+
+	public Map<String,  List<UserRegistration>> partitioningByLastname() {
+		return null;
+	}
+
+	public Map<Integer,  List<UserRegistration>> partitioningByAge2() {
+		return null;
 	}
 
 	@Override
-	public Map<String, String> getEmailAndFirstNameByMobileNo(Long MobileNo) {
-		return null;
+	public Double averageAge() {
+		return  usersMap.values().stream().collect(Collectors.averagingDouble(UserRegistration::getAge));
+	}
+
+	@Override
+	public Map<String,String> getEmailAndFirstNameByMobileNo(Long MobileNo) {
+		return usersMap.values()
+				.stream()
+				.filter(userRegistration -> userRegistration.getMobileNos().contains(MobileNo))
+				.collect(Collectors.toMap(UserRegistration::getEmailId,UserRegistration::getFirstname));
+	}
+
+	@Override
+	public void deleteAllUsers() {
+		log.info("Inside userDaoImpl deleteAllUsers :");
+		// usersMap.clear();
+	}
+
+	@Override
+	public UserRegistration updateUserRegistration(UserRegistration user) {
+		//log.info("Indise UserDaoImpl updateUserRegistration:{}",user);
+		if (!usersMap.containsKey(user.getUserId())) throw new UserNotFoundException("User not found");
+		usersMap.put(user.getUserId(), user);
+		return usersMap.get(user.getUserId());
+	}
+
+	@Override
+	public void deleteUserById(Long userId) {
+		//log.info("Indise UserDaoImpl deleteUserById:{}",userId);
+		usersMap.remove(userId);
 	}
 
 	@PreDestroy

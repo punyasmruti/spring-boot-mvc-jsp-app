@@ -64,11 +64,11 @@ public interface UserDao {
 	public Map<String,Integer> getUsersEmailAndAgeByAge(int age);
 	public Long countUsersByAgeRange(int age1,int age2) ;
 	public Long countUsersByAge(int age);
-	public Map<Object,List<UserRegistration>> grouUserByAge(Integer age);
+	public Map<String,List<UserRegistration>> groupUserByAge(Integer age);
 	public Optional<UserRegistration> minByAge();
 	public Optional<UserRegistration> maxByAge();
 	public  Map<Boolean,Map<String, List<String>>> partitioningByAge();
-	public double averageAge();
+	public Double averageAge();
 	
 	//by dob
 	public List<UserRegistration> getUsersByBirthDate_WithFirstnameInDescendingOrder(Date date);
